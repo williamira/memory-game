@@ -6,7 +6,6 @@ function App() {
   const [isGameOn, setIsGameOn] = useState(false);
   const [emojisData, setEmojisData] = useState([]);
 
-  console.log(emojisData);
 
   async function startGame(e) {
     e.preventDefault();
@@ -19,16 +18,35 @@ function App() {
       }
 
       const data = await response.json();
-      const dataSample = data.slice(0, 5);
+      const dataSlice = getDataSlice(data)
 
-      setEmojisData(dataSample);
+      setEmojisData(dataSlice);
       setIsGameOn(true);
     } catch (error) {
       console.error('error fetching data:', error);
     }
-
-
   }
+
+  function getDataSlice(data) {
+    const randomIndices = getRandomIndices(data)
+    const dataSlice = randomIndices.map(indice => data[indice])
+
+    return dataSlice
+  }
+
+  function getRandomIndices(data) {
+    const randomIndicesArray = [];
+    for (let i = 0; i < 5; i++) {
+      const randomNum = Math.floor(Math.random() * data.length);
+      if (!randomIndicesArray.includes(randomNum)) {
+        randomIndicesArray.push(randomNum)
+      } else {
+        i--
+      }
+    }
+    return randomIndicesArray;
+  }
+
   function turnCard() {
     console.log("Memory card clicked");
   }
