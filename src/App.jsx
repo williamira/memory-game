@@ -18,9 +18,10 @@ function App() {
       }
 
       const data = await response.json();
-      const dataSlice = getDataSlice(data)
+      const dataSlice = getDataSlice(data);
+      const emojisArray = getEmojisArray(dataSlice)
 
-      setEmojisData(dataSlice);
+      setEmojisData(emojisArray);
       setIsGameOn(true);
     } catch (error) {
       console.error('error fetching data:', error);
@@ -28,10 +29,10 @@ function App() {
   }
 
   function getDataSlice(data) {
-    const randomIndices = getRandomIndices(data)
-    const dataSlice = randomIndices.map(indice => data[indice])
+    const randomIndices = getRandomIndices(data);
+    const dataSlice = randomIndices.map(indice => data[indice]);
 
-    return dataSlice
+    return dataSlice;
   }
 
   function getRandomIndices(data) {
@@ -39,12 +40,22 @@ function App() {
     for (let i = 0; i < 5; i++) {
       const randomNum = Math.floor(Math.random() * data.length);
       if (!randomIndicesArray.includes(randomNum)) {
-        randomIndicesArray.push(randomNum)
+        randomIndicesArray.push(randomNum);
       } else {
-        i--
+        i--;
       }
     }
     return randomIndicesArray;
+  }
+
+  function getEmojisArray(data) {
+    const pairedEmojisArray = [...data, ...data]
+
+    for (let i = pairedEmojisArray.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [pairedEmojisArray[i], pairedEmojisArray[j]] = [pairedEmojisArray[j], pairedEmojisArray[i]]
+    }
+   return pairedEmojisArray
   }
 
   function turnCard() {
